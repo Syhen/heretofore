@@ -13,7 +13,7 @@ from twisted.internet import task
 from scrapy.exceptions import NotConfigured
 from scrapy import signals
 
-from heretofore.utils import authorized_requests
+from htfspider.utils import authorized_requests
 
 logger = logging.getLogger(__name__)
 
