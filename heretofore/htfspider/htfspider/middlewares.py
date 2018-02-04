@@ -5,13 +5,12 @@
 # See documentation in:
 # http://doc.scrapy.org/en/latest/topics/spider-middleware.html
 import logging
-import requests
 
 from scrapy import signals
 from scrapy.exceptions import NotConfigured
 from scrapy.downloadermiddlewares.retry import RetryMiddleware
 
-from heretofore.utils import authorized_requests
+from htfspider.utils import authorized_requests
 
 logger = logging.getLogger(__name__)
 
@@ -76,6 +75,10 @@ class CustomerRetryMiddleware(RetryMiddleware):
             )
             url = 'http://{host}/api/traceback/save/{name}'.format(host=self.master_host, name=spider.name)
             authorized_requests('POST', url, json={'data': data})
+            # req = request.copy()
+            # req.meta['retry_times'] = 0
+            # req.dont_filter = True
+            # req.priority = 1
             logger.debug("Gave up retrying %(request)s (failed %(retries)d times): %(reason)s",
                          {'request': request, 'retries': retries, 'reason': reason},
                          extra={'spider': spider})
