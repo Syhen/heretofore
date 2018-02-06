@@ -59,7 +59,11 @@ class JjwxcIndexSpider(RedisSpider):
             except IndexError:
                 self.logger.debug('no publish time: %s' % book_id)
                 continue
-            published_at = datetime.strptime(published_at, '%Y-%m-%d')
+            try:
+                published_at = datetime.strptime(published_at, '%Y-%m-%d')
+            except ValueError:
+                self.logger.debug('error format: %s' % published_at)
+                continue
             book_url = 'http://app.jjwxc.org/androidapi/novelbasicinfo?novelId={}'.format(book_id)
             yield FormRequest(
                 book_url,
