@@ -38,6 +38,10 @@ class ChuangshiDetailSpider(RedisSpider):
         item = BookDetailItem()
         item['source_id'] = 8
         item['book_id'] = response.url.split('/')[-1].split('.')[0]
+        if '小说不存在' in response.body:
+            item['status'] = 0
+            yield item
+            return
         item['total_word'] = int(response.xpath(u'string(//td[contains(.,"总字数")])').extract()[0].split(u'：')[1].strip())
         item['total_click'] = int(
             response.xpath(u'string(//td[contains(.,"总点击")])').extract()[0].split(u'：')[1].strip())
