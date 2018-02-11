@@ -177,8 +177,7 @@ class ScrapydScheduler(object):
         content = self.request('GET', '/listjobs.json', data={'project': self.project})
         job_list = [
             j['id']
-            for j in content['running'] + content['pending']
-            if j['project'] == self.project and j['spider'] == spider_name
+            for j in content['running'] + content['pending'] if j['spider'] == spider_name
         ]
         for job in job_list:
             data = self.request('POST', '/cancel.json', data={'project': self.project, 'job': job})
