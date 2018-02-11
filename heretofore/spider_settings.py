@@ -41,6 +41,10 @@ index_start_url_dict = {
     'xxsy': {
         'url': 'http://www.xxsy.net/search?s_wd=&vip=1&sort=5&pn={page}',
         'total_page': 30
+    },
+    'yunqi': {
+        'url': 'http://yunqi.qq.com/bk/so2/n30p{page}',
+        'total_page': 350
     }
 }
 
@@ -52,7 +56,7 @@ index_spider_dict = {
     'xxsy_index': 1,
     'jjwxc_index': 1,
     'chuangshi_index': 1,
-    # 'yunqi_index': 1
+    'yunqi_index': 1
 }
 
 detail_spider_dict = {
@@ -61,7 +65,7 @@ detail_spider_dict = {
     'xxsy_detail': 1,
     'jjwxc_detail': 1,
     'chuangshi_detail': 1,
-    # 'yunqi_detail': 1
+    'yunqi_detail': 1
 }
 
 mongo_uri = 'mongodb://localhost:27017'
