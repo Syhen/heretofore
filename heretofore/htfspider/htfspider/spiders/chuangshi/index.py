@@ -31,7 +31,7 @@ class ChuangshiIndexSpider(RedisSpider):
         db = client[db_name]
         if auth:
             db.authenticate(**auth)
-        books = set(i['book_id'] for i in db['book_index'].find({'source_id': 1}, {'book_id': 1}))
+        books = set(i['book_id'] for i in db['book_index'].find({'source_id': 8}, {'book_id': 1}))
         self.books = books
 
     def make_request_from_data(self, data):

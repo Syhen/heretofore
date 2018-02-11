@@ -24,6 +24,9 @@ class QidianMaleIndexSpider(RedisSpider):
 
     def __init__(self, **kwargs):
         super(QidianMaleIndexSpider, self).__init__(**kwargs)
+        self.get_books()
+
+    def get_books(self):
         mongo_uri = settings.get("MONGO_URI")
         db_name = settings.get("DB_NAME")
         auth = settings.get("AUTH")

@@ -31,7 +31,7 @@ class XxsyIndexSpider(RedisSpider):
         db = client[db_name]
         if auth:
             db.authenticate(**auth)
-        books = set(i['book_id'] for i in db['book_index'].find({'source_id': 1}, {'book_id': 1}))
+        books = set(i['book_id'] for i in db['book_index'].find({'source_id': 6}, {'book_id': 1}))
         self.books = books
 
     def make_request_from_data(self, data):
@@ -56,13 +56,16 @@ class XxsyIndexSpider(RedisSpider):
             )
 
     def parse_detail(self, response):
+        book_id = response.url.split('/')[-1].split('.')[0]
+        if book_id in self.books:
+            return
         sign = response.xpath('//p[@class="sub-cols"]/span/text()').extract()[0]
         if u'公众' in sign:
             self.logger.debug('[NOT SIGN]' + response.url)
             return
         item = BookListItem()
         item['url'] = response.url
-        item['book_id'] = response.url.split('/')[-1].split('.')[0]
+        item['book_id'] = book_id
         item['source_id'] = 6
         item['folder_url'] = response.xpath('//dl[@class="bookprofile"]/dt/img/@src').extract()[0]
         item['title'] = response.xpath('//div[@class="title"]/h1/text()').extract()[0]
