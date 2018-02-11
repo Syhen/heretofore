@@ -22,8 +22,8 @@ class XxsyIndexSpider(RedisSpider):
     redis_key = 'xxsy:index'
     today = datetime.strptime(time.strftime('%Y-%m-%d'), '%Y-%m-%d')
 
-    def __init__(self):
-        super(XxsyIndexSpider, self).__init__()
+    def __init__(self, **kwargs):
+        super(XxsyIndexSpider, self).__init__(**kwargs)
         mongo_uri = settings.get("MONGO_URI")
         db_name = settings.get("DB_NAME")
         auth = settings.get("AUTH")
