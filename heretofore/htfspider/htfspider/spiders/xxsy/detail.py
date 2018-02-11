@@ -98,6 +98,7 @@ class XxsyDetailSpider(RedisSpider):
         item = response.meta['item']
         if u'本书还没有粉丝' in response.body:
             item['fans'] = []
+            item['source_id'] = 6
             yield item
         else:
             fans_data = re.findall(r'list=\[(\{.*?\})\]', response.body)[0]
@@ -108,7 +109,6 @@ class XxsyDetailSpider(RedisSpider):
             item['fans'] = [{'name': key, 'value': counter[key]} for key in counter]
             item['source_id'] = 6
             yield item
-
 
     def str2num(self, string, cite):
         if u'万' in cite:
