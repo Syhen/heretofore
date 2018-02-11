@@ -74,7 +74,13 @@ class JjwxcIndexSpider(RedisSpider):
             )
 
     def parse_detail(self, response):
-        detail_json = json.loads(response.body)
+        try:
+            detail_json = json.loads(response.body)
+        except ValueError:
+            self.logger.error('[NO JSON]' + response.url)
+            with open('/Users/heyao/jjwxc_json.log', 'w') as f:
+                f.write('\n' + response.body)
+            return
         if 'code' in detail_json:
             return
         clock = int(detail_json['islock'])
