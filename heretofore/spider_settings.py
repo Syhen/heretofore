@@ -37,6 +37,10 @@ index_start_url_dict = {
     'chuangshi': {
         'url': 'http://chuangshi.qq.com/bk/so2/p/{page}.html',
         'total_page': 70
+    },
+    'xxsy': {
+        'url': 'http://www.xxsy.net/search?s_wd=&vip=1&sort=5&pn={page}',
+        'total_page': 30
     }
 }
 
@@ -45,7 +49,7 @@ host_list = ['localhost', '127.0.0.1']
 index_spider_dict = {
     'qidian_index': 1,
     'qdmm_index': 1,
-    # 'xxsy_index': 1,
+    'xxsy_index': 1,
     'jjwxc_index': 1,
     'chuangshi_index': 1,
     # 'yunqi_index': 1
@@ -54,7 +58,7 @@ index_spider_dict = {
 detail_spider_dict = {
     'qidian_detail': 1,
     'qdmm_detail': 1,
-    # 'xxsy_detail': 1,
+    'xxsy_detail': 1,
     'jjwxc_detail': 1,
     'chuangshi_detail': 1,
     # 'yunqi_detail': 1
