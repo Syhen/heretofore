@@ -86,8 +86,6 @@ class QidianMaleIndexSpider(RedisSpider):
         try:
             item['author'] = response.xpath(xpath_author).extract()[0]
         except IndexError:
-            with open('%s.html' % item['book_id'], 'w') as f:
-                f.write(response.body)
             return
         item['author_id'] = response.xpath(xpath_author_id).extract()[0].split('=')[-1]
         item['category'] = response.xpath(xpath_category).extract()[0]
