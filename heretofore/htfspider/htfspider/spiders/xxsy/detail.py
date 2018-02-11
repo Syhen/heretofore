@@ -38,15 +38,12 @@ class XxsyDetailSpider(RedisSpider):
         item = BookDetailItem()
         item.update(response.meta['data'])
         item['book_id'] = response.url.split('/')[-1].split('.')[0]
-        total_word = response.xpath('//p[@class="sub-data"]/span/em/text()').extract()[0][:-1]
-        cite = response.xpath('//p[@class="sub-data"]/span/em/text()').extract()[0]
-        item['total_word'] = self.str2num(total_word, cite)
-        total_click = response.xpath('//p[@class="sub-data"]/span/em/text()').extract()[1][:-1]
-        cite = response.xpath('//p[@class="sub-data"]/span/em/text()').extract()[1]
-        item['total_click'] = self.str2num(total_click, cite)
-        total_recommend = response.xpath('//p[@class="sub-data"]/span/em/text()').extract()[2][:-1]
-        cite = response.xpath('//p[@class="sub-data"]/span/em/text()').extract()[2]
-        item['total_recommend'] = self.str2num(total_recommend, cite)
+        total_word = response.xpath('//p[@class="sub-data"]/span/em/text()').extract()[0]
+        item['total_word'] = self.str2num(total_word)
+        total_click = response.xpath('//p[@class="sub-data"]/span/em/text()').extract()[1]
+        item['total_click'] = self.str2num(total_click)
+        total_recommend = response.xpath('//p[@class="sub-data"]/span/em/text()').extract()[2]
+        item['total_recommend'] = self.str2num(total_recommend)
         item['book_status'] = (u'完' in response.xpath('//p[@class="sub-cols"]/span/text()').extract()[1]) * 1
         item['total_scored_user'] = int(response.xpath('//p[@class="appraisaled"]/text()').extract()[0][2: -3])
         item['total_score'] = float(response.xpath('//div[@id="bookstar"]/@data-score').extract()[0])
@@ -110,9 +107,11 @@ class XxsyDetailSpider(RedisSpider):
             item['source_id'] = 6
             yield item
 
-    def str2num(self, string, cite):
-        if u'万' in cite:
-            return int(float(string) * 10000)
+    def str2num(self, string):
+        if u'万' in string:
+            return int(float(string[:-1]) * 10000)
+        if u'亿' in string:
+            return int(float(string[:-1]) * 100000000)
         else:
             return int(string)
 
