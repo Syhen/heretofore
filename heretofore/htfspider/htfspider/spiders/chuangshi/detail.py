@@ -97,7 +97,7 @@ class ChuangshiDetailSpider(RedisSpider):
     def parse_score(self, response):
         item = response.meta['item']
         score_json = json.loads(response.body)
-        if '评分' in response.body:
+        if '暂无评分' in response.body or score_json['code'] != 0:
             item['total_score'] = -1.0
             item['total_scored_user'] = -1
         else:
