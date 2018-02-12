@@ -80,21 +80,25 @@ class JjwxcDetialSpider(RedisSpider):
         fans_page = response.meta['fans_page']
         fans_level = response.meta['fans_level']
         item = response.meta['item']
-        if '暂无霸王票' in response.body:
-            yield item
-        else:
-            sel = Selector(text=response.body.decode('gbk', 'ignore'))
-            fans_level.extend(sel.xpath('//*[@id="rank"]/div[2]/table/tr/td[2]/text()').extract())
-            fans_page += 1
-            if fans_page > 5:
+        if u'暂无霸王票' in response.body.decode('gbk', 'ignore'):
+            item['fans'] = []
+            if fans_level:
                 counter = Counter(fans_level)
                 item['fans'] = [{'name': k, 'value': counter[k]} for k in counter]
-                yield item
-            else:
-                yield Request(
-                    url='http://www.jjwxc.net/reader_kingticket.php?novelid={0}&page={1}'.format(
-                        item['book_id'], fans_page),
-                    meta={'item': item, 'fans_page': fans_page, 'fans_level': fans_level},
-                    callback=self.parse_fans,
-                    dont_filter=True
-                )
+            yield item
+            return
+        sel = Selector(text=response.body.decode('gbk', 'ignore'))
+        fans_level.extend(sel.xpath('//*[@id="rank"]/div[2]/table/tr/td[2]/text()').extract())
+        fans_page += 1
+        if fans_page > 5:
+            counter = Counter(fans_level)
+            item['fans'] = [{'name': k, 'value': counter[k]} for k in counter]
+            yield item
+        else:
+            yield Request(
+                url='http://www.jjwxc.net/reader_kingticket.php?novelid={0}&page={1}'.format(
+                    item['book_id'], fans_page),
+                meta={'item': item, 'fans_page': fans_page, 'fans_level': fans_level},
+                callback=self.parse_fans,
+                dont_filter=True
+            )
