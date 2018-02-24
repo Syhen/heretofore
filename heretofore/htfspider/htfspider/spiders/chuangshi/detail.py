@@ -101,7 +101,7 @@ class ChuangshiDetailSpider(RedisSpider):
             item['total_score'] = -1.0
             item['total_scored_user'] = -1
         else:
-            if 'intro' not in score_json['introinfo']['scoreInfo'].keys():
+            if 'scoretext' not in score_json['introinfo']['scoreInfo'].keys():
                 item['total_score'] = -1.0
                 item['total_scored_user'] = -1
             else:
