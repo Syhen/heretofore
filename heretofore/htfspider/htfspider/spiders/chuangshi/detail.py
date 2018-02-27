@@ -29,6 +29,7 @@ class ChuangshiDetailSpider(RedisSpider):
         if url:
             req = Request(
                 url,
+                meta={'data': data},
                 callback=self.parse,
                 dont_filter=True
             )
@@ -36,6 +37,7 @@ class ChuangshiDetailSpider(RedisSpider):
 
     def parse(self, response):
         item = BookDetailItem()
+        item.update(response.meta['data'])
         item['source_id'] = 8
         item['book_id'] = response.url.split('/')[-1].split('.')[0]
         if '小说不存在' in response.body:
