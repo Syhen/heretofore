@@ -59,7 +59,7 @@ class YunqiIndexSpider(RedisSpider):
         book_id = response.url.split('/')[-1].split('.')[0]
         if book_id in self.books:
             return
-        if '小说不存在' in response.body:
+        if '小说不存在' in response.body or '无法找到该页' in response.body:
             self.logger.debug('[NO THIS BOOK]' + response.url)
             return
         sign = response.xpath('//div[@class="y"]/a/text()').extract()[0]
