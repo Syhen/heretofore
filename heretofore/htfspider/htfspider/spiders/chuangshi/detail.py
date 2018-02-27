@@ -100,17 +100,16 @@ class ChuangshiDetailSpider(RedisSpider):
         if '暂无评分' in response.body or score_json['code'] != 0:
             item['total_score'] = -1.0
             item['total_scored_user'] = -1
+        elif 'scoretext' not in score_json['introinfo']['scoreInfo'].keys():
+            item['total_score'] = -1.0
+            item['total_scored_user'] = -1
         else:
-            if 'scoretext' not in score_json['introinfo']['scoreInfo'].keys():
-                item['total_score'] = -1.0
+            item['total_score'] = float(score_json['introinfo']['scoreInfo']['scoretext'])
+            total_scored_user = score_json['introinfo']['scoreInfo']['intro']
+            try:
+                item['total_scored_user'] = int(re.findall(r'(\d+)', total_scored_user)[0])
+            except IndexError:
                 item['total_scored_user'] = -1
-            else:
-                item['total_score'] = float(score_json['introinfo']['scoreInfo']['scoretext'])
-                total_scored_user = score_json['introinfo']['scoreInfo']['intro']
-                try:
-                    item['total_scored_user'] = int(re.findall(r'(\d+)', total_scored_user)[0])
-                except IndexError:
-                    item['total_scored_user'] = -1
         fans_page = 1
         item['fans'] = []
         fans_url = 'http://chuangshi.qq.com/novel/getNovelfansajax.html?bid={0}&page={1}'.format(
