@@ -40,6 +40,7 @@ def remove_mongo_data(spider_name):
     if 'detail' in data_coll:
         data = list(db[data_coll + '_history'].find({'source_id': source_id, 'history_created_at': today}))
         if data:
+            db[data_coll + '_history_copy'].delete_many({'source_id': source_id, 'history_created_at': today})
             db[data_coll + '_history_copy'].insert_many(data)
     # 删除数据
     if 'detail' in data_coll:
