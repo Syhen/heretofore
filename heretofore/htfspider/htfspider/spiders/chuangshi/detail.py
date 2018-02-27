@@ -107,7 +107,7 @@ class ChuangshiDetailSpider(RedisSpider):
             item['total_score'] = float(score_json['introinfo']['scoreInfo']['scoretext'])
             total_scored_user = score_json['introinfo']['scoreInfo']['intro']
             try:
-                item['total_scored_user'] = int(re.findall(r'(\d+)', total_scored_user)[0])
+                item['total_scored_user'] = self.str2num(total_scored_user)
             except IndexError:
                 item['total_scored_user'] = -1
         fans_page = 1
@@ -142,3 +142,16 @@ class ChuangshiDetailSpider(RedisSpider):
                 callback=self.parse_fans,
                 dont_filter=True
             )
+
+    def str2num(self, string):
+        """
+        评论人数万和亿为单位
+        :param string:
+        :return:
+        """
+        if '万' in string:
+            return int(float(string) * 10000)
+        elif '亿' in string:
+            return int(float(string) * 100000000)
+        else:
+            return int(string)
