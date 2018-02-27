@@ -108,10 +108,10 @@ class ChuangshiDetailSpider(RedisSpider):
         else:
             item['total_score'] = float(score_json['introinfo']['scoreInfo']['scoretext'])
             total_scored_user = score_json['introinfo']['scoreInfo']['intro']
-            try:
-                item['total_scored_user'] = self.str2num(total_scored_user)
-            except IndexError:
+            if '小编评分' in total_scored_user:
                 item['total_scored_user'] = -1
+            else:
+                item['total_scored_user'] = self.str2num(total_scored_user[1: -3])
         fans_page = 1
         item['fans'] = []
         fans_url = 'http://chuangshi.qq.com/novel/getNovelfansajax.html?bid={0}&page={1}'.format(
@@ -152,8 +152,8 @@ class ChuangshiDetailSpider(RedisSpider):
         :return:
         """
         if '万' in string:
-            return int(float(string) * 10000)
+            return int(float(string[:-1]) * 10000)
         elif '亿' in string:
-            return int(float(string) * 100000000)
+            return int(float(string[:-1]) * 100000000)
         else:
             return int(string)
