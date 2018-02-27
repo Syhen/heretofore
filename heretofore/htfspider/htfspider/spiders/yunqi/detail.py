@@ -36,13 +36,14 @@ class YunqiDetailSpider(RedisSpider):
             return req
 
     def parse(self, response):
-        if '小说不存在' in response.body:
-            self.logger.debug('[NOT THIS BOOK]' + response.url)
-            return
         item = BookDetailItem()
         item.update(response.meta['data'])
         item['source_id'] = 11
         item['book_id'] = response.url.split('/')[-1].split('.')[0]
+        if '小说不存在' in response.body:
+            item['status'] = 0
+            yield item
+            return
         item['book_status'] = 1
         item['total_word'] = int(response.xpath(u'string(//td[contains(.,"总字数")])').extract()[0].split(u'：')[1].strip())
         item['total_click'] = int(
