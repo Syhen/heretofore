@@ -59,7 +59,7 @@ class YunqiIndexSpider(RedisSpider):
         book_id = response.url.split('/')[-1].split('.')[0]
         if book_id in self.books:
             return
-        if '小说不存在' in response.body:
+        if '小说不存在' in response.body or '无法找到该页' in response.body:
             self.logger.debug('[NO THIS BOOK]' + response.url)
             return
         sign = response.xpath('//div[@class="y"]/a/text()').extract()[0]
@@ -76,6 +76,7 @@ class YunqiIndexSpider(RedisSpider):
             item['author'] = response.xpath('//div[@class="au_name"]/p[2]/a/text()').extract()[0]
         except IndexError:
             item['author'] = response.xpath('//div[@id="authorWeixinContent"]/text()').extract()[0].split('：')[0][:-1]
+        item['folder_url'] = response.xpath('//div[@class="cover"]/a/img/@src').extract()[0]
         item['category'] = response.xpath('//div[@class="title"]/a/text()').extract()[1]
         item['sub_category'] = response.xpath('//div[@class="title"]/a/text()').extract()[2]
         item['introduction'] = '\n'.join(response.xpath('//div[@class="info"]/p/text()').extract())
