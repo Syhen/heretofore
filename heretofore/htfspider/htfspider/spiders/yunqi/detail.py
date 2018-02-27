@@ -78,7 +78,7 @@ class YunqiDetailSpider(RedisSpider):
             item['total_ticket'] = int(
                 sel.xpath('//*[@id="swishnev001"]/div[1]/ul/li[1]/b[2]/span/text()').extract()[0])
             ticket_rank = sel.xpath('//*[@id="swishnev001"]/div[1]/ul/li[1]/b[2]/text()[2]').extract()[0]
-            item['ticket_rank'] = int(re.findall(r'(\w+)', ticket_rank)[0])
+            item['ticket_rank'] = int(re.findall(r'(\d+)', ticket_rank)[0])
         except IndexError:
             item['total_ticket'] = -1
             item['ticket_rank'] = -1
@@ -95,13 +95,19 @@ class YunqiDetailSpider(RedisSpider):
     def parse_score(self, response):
         item = response.meta['item']
         score_json = json.loads(response.body)
-        if '评分' in response.body:
+        if '暂无评分' in response.body or score_json['code'] != 0:
+            item['total_score'] = -1.0
+            item['total_scored_user'] = -1
+        elif 'scoretext' not in score_json['introinfo']['scoreInfo'].keys():
             item['total_score'] = -1.0
             item['total_scored_user'] = -1
         else:
             item['total_score'] = float(score_json['introinfo']['scoreInfo']['scoretext'])
             total_scored_user = score_json['introinfo']['scoreInfo']['intro']
-            item['total_scored_user'] = int(re.findall(r'(\w+)', total_scored_user)[0])
+            try:
+                item['total_scored_user'] = int(re.findall(r'(\d+)', total_scored_user)[0])
+            except IndexError:
+                item['total_scored_user'] = -1
         fans_page = 1
         item['fans'] = []
         fans_url = 'http://chuangshi.qq.com/novel/getNovelfansajax.html?bid={0}&page={1}'.format(
