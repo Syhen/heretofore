@@ -124,7 +124,7 @@ class YunqiDetailSpider(RedisSpider):
                 item['total_scored_user'] = self.str2num(total_scored_user[1: -3])
         fans_page = 1
         item['fans'] = []
-        fans_url = 'http://chuangshi.qq.com/novel/getNovelfansajax.html?bid={0}&page={1}'.format(
+        fans_url = 'http://yunqi.qq.com/novel/getNovelfansajax.html?bid={0}&page={1}'.format(
             item['book_id'], fans_page)
         yield Request(
             url=fans_url,
@@ -146,7 +146,7 @@ class YunqiDetailSpider(RedisSpider):
             counter = Counter(fans_level)
             item['fans'] = [{'name': k, 'value': counter[k]} for k in counter]
             fans_page += 1
-            fans_url = 'http://chuangshi.qq.com/novel/getNovelfansajax.html?bid={0}&page={1}'.format(
+            fans_url = 'http://yunqi.qq.com/novel/getNovelfansajax.html?bid={0}&page={1}'.format(
                 item['book_id'], fans_page)
             yield Request(
                 url=fans_url,
