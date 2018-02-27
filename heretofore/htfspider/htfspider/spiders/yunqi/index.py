@@ -76,6 +76,7 @@ class YunqiIndexSpider(RedisSpider):
             item['author'] = response.xpath('//div[@class="au_name"]/p[2]/a/text()').extract()[0]
         except IndexError:
             item['author'] = response.xpath('//div[@id="authorWeixinContent"]/text()').extract()[0].split('：')[0][:-1]
+        item['folder_url'] = response.xpath('//div[@class="cover"]/a/img/@src').extract()[0]
         item['category'] = response.xpath('//div[@class="title"]/a/text()').extract()[1]
         item['sub_category'] = response.xpath('//div[@class="title"]/a/text()').extract()[2]
         item['introduction'] = '\n'.join(response.xpath('//div[@class="info"]/p/text()').extract())
