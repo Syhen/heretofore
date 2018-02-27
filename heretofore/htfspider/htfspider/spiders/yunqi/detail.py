@@ -36,6 +36,9 @@ class YunqiDetailSpider(RedisSpider):
             return req
 
     def parse(self, response):
+        if '小说不存在' in response.body:
+            self.logger.debug('[NOT THIS BOOK]' + response.url)
+            return
         item = BookDetailItem()
         item.update(response.meta['data'])
         item['source_id'] = 11
@@ -59,11 +62,16 @@ class YunqiDetailSpider(RedisSpider):
         )
 
     def parse_total_comment(self, response):
+        """
+        获取该书评论数
+        :param response:
+        :return:
+        """
         item = response.meta['item']
         comment_json = json.loads(response.body)
         item['total_comment'] = int(comment_json['data']['commentNum'])
         yield Request(
-            url='http://chuangshi.qq.com/novel/interactCenter.html?bid={}&tab=0'.format(item['book_id']),
+            url='http://yunqi.qq.com/novel/interactCenter.html?bid={}&tab=0'.format(item['book_id']),
             meta={'item': item},
             callback=self.parse_total,
             dont_filter=True
@@ -93,6 +101,11 @@ class YunqiDetailSpider(RedisSpider):
         )
 
     def parse_score(self, response):
+        """
+        获取该书评分、评分人数
+        :param response:
+        :return:
+        """
         item = response.meta['item']
         score_json = json.loads(response.body)
         if '暂无评分' in response.body or score_json['code'] != 0:
@@ -103,9 +116,9 @@ class YunqiDetailSpider(RedisSpider):
             item['total_scored_user'] = -1
         else:
             item['total_score'] = float(score_json['introinfo']['scoreInfo']['scoretext'])
-            total_scored_user = score_json['introinfo']['scoreInfo']['intro']
+            total_scored_user = score_json['introinfo']['scoreInfo']['intro'][:-2]
             try:
-                item['total_scored_user'] = int(re.findall(r'(\d+)', total_scored_user)[0])
+                item['total_scored_user'] = self.str2num(total_scored_user)
             except IndexError:
                 item['total_scored_user'] = -1
         fans_page = 1
@@ -140,3 +153,16 @@ class YunqiDetailSpider(RedisSpider):
                 callback=self.parse_fans,
                 dont_filter=True
             )
+
+    def str2num(self, string):
+        """
+        评论人数万和亿为单位
+        :param string:
+        :return:
+        """
+        if '万' in string:
+            return int(float(string) * 10000)
+        elif '亿' in string:
+            return int(float(string) * 100000000)
+        else:
+            return int(string)
