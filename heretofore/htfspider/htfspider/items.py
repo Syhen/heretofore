@@ -24,6 +24,10 @@ class BookListItem(scrapy.Item):
     created_at = scrapy.Field()  # 创建时间
     updated_at = scrapy.Field()  # 更新时间
     chan_id = scrapy.Field()  # 讨论id
+    yousuu_status = scrapy.Field()
+    tieba_status = scrapy.Field()
+    content_status = scrapy.Field()
+    yousuu_score = scrapy.Field()
 
 
 class BookDetailItem(scrapy.Item):
@@ -59,3 +63,8 @@ class BookDetailItem(scrapy.Item):
     # 对于历史的信息，应该有这些东西
     history_created_at = scrapy.Field()
     history_created_at_str = scrapy.Field()
+
+    yousuu_status = scrapy.Field()
+    tieba_status = scrapy.Field()
+    content_status = scrapy.Field()
+    yousuu_score = scrapy.Field()
