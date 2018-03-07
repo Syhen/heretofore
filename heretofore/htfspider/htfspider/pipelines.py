@@ -22,6 +22,12 @@ class HtfspiderPipeline(object):
 
     def process_item(self, item, spider):
         if '_index' in spider.name:
+            if spider.name == 'qidian_index_add_field':
+                self.db['book_index'].update_one(
+                    {'_id': '%s_%s' % (item['source_id'], item['book_id'])},
+                    {'$set': item}
+                )
+                return item
             self.db['book_index'].update_one(
                 {'_id': '%s_%s' % (item['source_id'], item['book_id'])},
                 {'$setOnInsert': item},
