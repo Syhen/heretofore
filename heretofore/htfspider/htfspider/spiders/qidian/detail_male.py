@@ -60,6 +60,30 @@ class QidianDetailSpider(RedisSpider):
             updated_at = tomorrow + ' ' + updated_at[2:-2] + ':00'
         return updated_at
 
+    @staticmethod
+    def str2date(string, datefmt=None):
+        """1小时前、前天转日期或时间
+        :param string: 
+        :return: 
+        """
+        now = datetime.datetime.now()
+        dt = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute)
+        if '秒' in string:
+            return dt
+        if '分' in string:
+            return dt - datetime.timedelta(minutes=int(string[:string.index('分')]))
+        if '小时' in string:
+            return dt - datetime.timedelta(hours=int(string[:string.index('小时')]))
+        if '天' in string:
+            n = 1 if '昨天' in string else 2 if '前天' in string else 0
+            if n == 0:
+                n = int(string[:string.index('天')])
+            return dt - datetime.timedelta(days=n)
+        else:
+            if datefmt:
+                return datetime.datetime.strptime(string, datefmt)
+            raise RuntimeError("you must pass 'datefmt' for not in ('秒', '分', '小时', '天')")
+
     def parse(self, response):
         item = BookDetailItem()
         item.update(response.meta['data'])
@@ -91,7 +115,7 @@ class QidianDetailSpider(RedisSpider):
             item['reward'] = 0
         item['book_status'] = (u'完本' in response.xpath('//span[@class="blue"]').extract()[0]) * 1
         book_updated_at = self.parse_updated_at(response.xpath('//em[@class="time"]/text()').extract()[0])
-        item['book_updated_at'] = datetime.datetime.strptime(book_updated_at, '%Y-%m-%d %H:%M:%S')
+        item['book_updated_at'] = self.str2date(book_updated_at, '%Y-%m-%d')
         item['updated_at'] = self.today
         fans_url = 'https://book.qidian.com/fansrank/{0}'.format(item['book_id'])
         yield Request(
