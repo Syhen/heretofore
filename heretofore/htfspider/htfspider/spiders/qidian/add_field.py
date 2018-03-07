@@ -19,7 +19,7 @@ from htfspider.items import BookListItem
 
 class QidianMaleIndexSpider(RedisSpider):
     name = 'qidian_index_add_field'
-    redis_key = 'qidian:index'
+    redis_key = 'qidian:detail'
     # today = datetime.datetime.strptime(time.strftime('%Y-%m-%d'), '%Y-%m-%d')
 
     def __init__(self, **kwargs):
