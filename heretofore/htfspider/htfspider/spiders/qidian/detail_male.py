@@ -74,10 +74,13 @@ class QidianDetailSpider(RedisSpider):
             return dt - datetime.timedelta(minutes=int(string[:string.index('分')]))
         if '小时' in string:
             return dt - datetime.timedelta(hours=int(string[:string.index('小时')]))
-        if '天' in string:
-            n = 1 if '昨天' in string else 2 if '前天' in string else 0
+        if any(s in string for s in ('天', '日')):
+            n = 1 if any(s in string for s in ('昨天', '昨日')) else 2 if any(s in string for s in ('前天', '前日')) else 0
             if n == 0:
-                n = int(string[:string.index('天')])
+                try:
+                    n = int(string[:string.index('天')])
+                except ValueError:
+                    n = int(string[:string.index('日')])
             return dt - datetime.timedelta(days=n)
         else:
             if datefmt:
