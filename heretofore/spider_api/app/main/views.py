@@ -11,7 +11,7 @@ from flask import render_template, jsonify
 
 from app import mongodb
 from . import main
-from app.tasks.http.slave import get_log_system
+from app.tasks.http.subordinate import get_log_system
 
 
 @main.route('/')

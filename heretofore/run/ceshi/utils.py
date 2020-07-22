@@ -11,7 +11,7 @@ import redis
 
 from hm_collections.queue.redis_queue import RedisSetQueue
 
-from heretofore.master_func import generate_id_coll, generate_data
+from heretofore.main_func import generate_id_coll, generate_data
 from heretofore.pool import redis_connection_pool, db
 
 r = redis.StrictRedis(connection_pool=redis_connection_pool)

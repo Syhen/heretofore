@@ -19,7 +19,7 @@ data_coll_dict = {
     'detail': 'book_detail'
 }
 
-master_host = 'localhost'
+main_host = 'localhost'
 
 index_start_url_dict = {
     'qidian': {

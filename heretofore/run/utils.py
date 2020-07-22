@@ -7,7 +7,7 @@ author @heyao
 
 import time
 
-from heretofore.master_func import get_cpu_momery_info, distribute_info, start_spider
+from heretofore.main_func import get_cpu_momery_info, distribute_info, start_spider
 from heretofore.spider_settings import host_list
 
 
