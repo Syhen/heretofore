@@ -20,7 +20,7 @@ class ErrorSaveMiddleware(object):
     # scrapy acts as if the spider middleware does not modify the
     # passed objects.
     def __init__(self, settings):
-        self.master_host = settings.get("MASTER_HOST")
+        self.main_host = settings.get("MASTER_HOST")
 
     @classmethod
     def from_crawler(cls, crawler):
@@ -38,7 +38,7 @@ class ErrorSaveMiddleware(object):
 
     def process_spider_error(self, failure, response, spider):
         data = dict(error=failure.getTraceback(), url=response.url, spider=spider.name, error_type=1)
-        url = 'http://{host}/api/traceback/save/{name}'.format(host=self.master_host, name=spider.name)
+        url = 'http://{host}/api/traceback/save/{name}'.format(host=self.main_host, name=spider.name)
         data['formdata'] = response.request.body
         authorized_requests('POST', url, json={'data': data})
 
@@ -51,7 +51,7 @@ class CustomerRetryMiddleware(RetryMiddleware):
         self.max_retry_times = settings.getint('RETRY_TIMES')
         self.retry_http_codes = set(int(x) for x in settings.getlist('RETRY_HTTP_CODES'))
         self.priority_adjust = settings.getint('RETRY_PRIORITY_ADJUST')
-        self.master_host = settings.get("MASTER_HOST")
+        self.main_host = settings.get("MASTER_HOST")
 
     def _retry(self, request, reason, spider):
         retries = request.meta.get('retry_times', 0) + 1
@@ -73,7 +73,7 @@ class CustomerRetryMiddleware(RetryMiddleware):
                 spider=spider.name,
                 error_type=0
             )
-            url = 'http://{host}/api/traceback/save/{name}'.format(host=self.master_host, name=spider.name)
+            url = 'http://{host}/api/traceback/save/{name}'.format(host=self.main_host, name=spider.name)
             authorized_requests('POST', url, json={'data': data})
             # req = request.copy()
             # req.meta['retry_times'] = 0

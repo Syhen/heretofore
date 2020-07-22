@@ -12,7 +12,7 @@ from app import basic_auth, mongodb
 from app.exceptions import ApiExceptions, UNAUTHORIZED, INTERNAL_SERVER_ERROR
 from . import api
 from .. import task_redis
-from ..tasks.http.slave import task_schedule_spider, task_resume_spider_if_has_data, task_on_spider_open
+from ..tasks.http.subordinate import task_schedule_spider, task_resume_spider_if_has_data, task_on_spider_open
 from ..utils import RequestParser
 
 
@@ -93,7 +93,7 @@ def cpu():
     return jsonify(code=200, msg='SUCCESS', data=dict(cpu_percent=cpu_info))
 
 
-# ======== master ========
+# ======== main ========
 @api.route('/ready/stop/<spider_name>')
 @basic_auth.login_required
 def ready_stop(spider_name):

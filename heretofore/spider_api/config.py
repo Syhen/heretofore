@@ -24,10 +24,10 @@ class DevelopmentConfig(Config):
 
     LOG_PATH = '/Users/heyao/spider_api.log'
 
-    # master
+    # main
     MASTER_HOST = 'localhost'
 
-    # slave
+    # subordinate
     SPIDER_PATH = '/Users/heyao/heretofore/heretofore/htfspider'
     SPIDER_PID_FILE_PATH = '/Users/heyao/heretofore/heretofore/var'
 

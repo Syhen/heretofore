@@ -59,7 +59,7 @@ MONGO_URI = 'mongodb://localhost:27017'
 DB_NAME = 'htf_spider'
 AUTH = {}
 
-# master settings
+# main settings
 MASTER_HOST = 'localhost'
 MASTER_PORT = '8001'
 

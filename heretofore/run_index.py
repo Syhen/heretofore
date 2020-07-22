@@ -10,7 +10,7 @@ import time
 import pymongo
 import redis
 
-from heretofore.master_func import get_cpu_momery_info, distribute_info, start_spider
+from heretofore.main_func import get_cpu_momery_info, distribute_info, start_spider
 from heretofore.spider_settings import mongo_uri, redis_uri, mongo_auth, host_list, index_spider_dict as spider_dict
 
 con = pymongo.MongoClient(mongo_uri)

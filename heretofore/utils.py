@@ -16,7 +16,7 @@ def authorized_requests(method, url, username='', password='', **kwargs):
     username = username or usernm
     password = password or passwd
     headers = kwargs.pop('headers', {})
-    headers.update({'User-Agent': 'htf-slave'})
+    headers.update({'User-Agent': 'htf-subordinate'})
     response = requests.request(method, url, headers=headers, auth=(username, password), **kwargs)
     content = response.content
     response.close()

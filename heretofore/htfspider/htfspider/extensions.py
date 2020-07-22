@@ -21,10 +21,10 @@ logger = logging.getLogger(__name__)
 class SpiderOnOpenClose(object):
     """Log basic scraping stats periodically"""
 
-    def __init__(self, stats, crawler_signals, master_host, interval=60.0, total_times=5):
+    def __init__(self, stats, crawler_signals, main_host, interval=60.0, total_times=5):
         self.stats = stats
         self.interval = interval
-        self.master_host = master_host
+        self.main_host = main_host
         self.total_times = total_times
         self.collect_time = 0
         self.multiplier = 60.0 / self.interval
@@ -35,10 +35,10 @@ class SpiderOnOpenClose(object):
     def from_crawler(cls, crawler):
         interval = crawler.settings.getfloat('OOC_INTERVAL')
         total_times = crawler.settings.getfloat('OOC_TOTAL')
-        master_host = crawler.settings.get('MASTER_HOST')
+        main_host = crawler.settings.get('MASTER_HOST')
         if not interval or not total_times:
             raise NotConfigured
-        o = cls(crawler.stats, crawler.signals, master_host, interval, total_times)
+        o = cls(crawler.stats, crawler.signals, main_host, interval, total_times)
         crawler.signals.connect(o.spider_opened, signal=signals.spider_opened)
         crawler.signals.connect(o.spider_closed, signal=signals.spider_closed)
         return o
@@ -72,6 +72,6 @@ class SpiderOnOpenClose(object):
     def spider_closed(self, spider, reason):
         if self.task and self.task.running:
             self.task.stop()
-        # 发送退出消息，让master发送SIGINT指令
+        # 发送退出消息，让main发送SIGINT指令
         authorized_requests('GET', 'http://{host}/api/ready/stop/{name}'.format(host=settings.get("MASTER_HOST"), name=spider.name))
         logger.info('close spider %s, reason %s' % (spider.name, reason))
